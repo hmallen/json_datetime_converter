@@ -112,9 +112,7 @@ class JSONDatetimeConverter:
 
                 logger.debug('json_data_converted[data]: ' + str(json_data_converted[data]))
 
-            json_file_new = json_file.rstrip('.json') + '_modified.json'
-
-            with open(json_file_new, 'w', encoding='utf-8') as file:
+            with open(json_file, 'w', encoding='utf-8') as file:
                 json.dump(json_data_converted, file, indent=4, sort_keys=True, ensure_ascii=False)
 
             json_converted_return['status'] = True

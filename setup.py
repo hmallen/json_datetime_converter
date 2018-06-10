@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='json_datetime_converter',
-    version='0.1a',
+    version='0.1a1',
     author='Hunter M. Allen',
     author_email='allenhm@gmail.com',
     license='MIT',
