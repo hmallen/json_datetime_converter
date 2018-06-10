@@ -9,8 +9,8 @@ logger.setLevel(logging.DEBUG)
 
 
 class JSONDatetimeConverter:
-    def __init__(self):
-        pass
+    def __init__(self, conversion_list):
+        self.conversion_list = conversion_list
 
 
     # Convert to and from types encodable by json module
@@ -52,8 +52,8 @@ class JSONDatetimeConverter:
     def read_json(self, json_file):
         json_converted_return = {'data': None, 'status': None}
 
-        conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
-                           'flatline_last', 'flatline_timeout', 'flatline_delta']
+        #conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
+                           #'flatline_last', 'flatline_timeout', 'flatline_delta']
 
         json_data_converted = {}
 
@@ -62,7 +62,7 @@ class JSONDatetimeConverter:
                 json_data_raw = json.loads(file.read())
 
             for data in json_data_raw:
-                if data in conversion_list:
+                if data in self.conversion_list:
                     if data == 'heartbeat_last' or data == 'flatline_last':
                         json_data_converted[data] = dateutil.parser.parse(json_data_raw[data])
 
@@ -92,14 +92,14 @@ class JSONDatetimeConverter:
     def write_json(self, json_data, json_file):
         json_converted_return = {'data': None, 'status': None}
 
-        conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
-                           'flatline_last', 'flatline_timeout', 'flatline_delta']
+        #conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
+                           #'flatline_last', 'flatline_timeout', 'flatline_delta']
 
         json_data_converted = {}
 
         try:
             for data in json_data:
-                if data in conversion_list:
+                if data in self.conversion_list:
                     json_data_converted[data] = JSONDatetimeConverter.convert_datetime(json_data[data])
 
                 else:
@@ -121,7 +121,10 @@ class JSONDatetimeConverter:
 
 
 if __name__ == '__main__':
-    json_dt_converter = JSONDatetimeConverter()
+    conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
+                       'flatline_last', 'flatline_timeout', 'flatline_delta']
+
+    json_dt_converter = JSONDatetimeConverter(conversion_list=conversion_list)
 
     """
     test_file = 'test.json'
