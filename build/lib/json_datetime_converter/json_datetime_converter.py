@@ -4,6 +4,8 @@ import logging
 import os
 import sys
 
+import dateutil.parser
+
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -53,14 +55,16 @@ class JSONDatetimeConverter:
     def read_json(self, json_file):
         json_converted_return = {'data': None, 'status': None}
 
-        #conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
-                           #'flatline_last', 'flatline_timeout', 'flatline_delta']
+        #conversion_list = ['heartbeat_last', 'heartbeat_timeout'
+                           #'flatline_last', 'flatline_timeout']
 
         json_data_converted = {}
 
         try:
             with open(json_file, 'r', encoding='utf-8') as file:
                 json_data_raw = json.loads(file.read())
+
+            logger.debug('json_data_raw: ' + str(json_data_raw))
 
             for data in json_data_raw:
                 if data in self.conversion_list:
@@ -71,7 +75,7 @@ class JSONDatetimeConverter:
                         json_data_converted[data] = datetime.timedelta(seconds=json_data_raw[data])
 
                     else:
-                        logger.error('Unknown json data key.')
+                        logger.error('Unknown json data key: ' + data)
 
                 else:
                     json_data_converted[data] = json_data_raw[data]
@@ -106,7 +110,11 @@ class JSONDatetimeConverter:
                 else:
                     json_data_converted[data] = json_data[data]
 
-            with open(json_file, 'w', encoding='utf-8') as file:
+                logger.debug('json_data_converted[data]: ' + str(json_data_converted[data]))
+
+            json_file_new = json_file.rstrip('.json') + '_modified.json'
+
+            with open(json_file_new, 'w', encoding='utf-8') as file:
                 json.dump(json_data_converted, file, indent=4, sort_keys=True, ensure_ascii=False)
 
             json_converted_return['status'] = True
@@ -122,23 +130,21 @@ class JSONDatetimeConverter:
 
 
 if __name__ == '__main__':
-    conversion_list = ['heartbeat_last', 'heartbeat_timeout', 'heartbeat_delta',
-                       'flatline_last', 'flatline_timeout', 'flatline_delta']
+    conversion_list = ['heartbeat_last', 'heartbeat_timeout',
+                       'flatline_last', 'alert_reset_interval']
 
     json_dt_converter = JSONDatetimeConverter(conversion_list=conversion_list)
 
-    """
     test_file = 'test.json'
 
     json_data = json_dt_converter.read_json(test_file)
 
     print('json_data[\'data\']: ', json_data['data'])
-    print('json_data['\status\']: ', json_data['status'])
+    print('json_data[\'status\']: ', json_data['status'])
 
-    json_data['heartbeat_last'] = datetime.datetime.now()
+    json_data['data']['heartbeat_last'] = datetime.datetime.now()
 
-    json_data = json_dt_converter.write_json(json_data=json_data, json_file=test_file)
+    json_data = json_dt_converter.write_json(json_data=json_data['data'], json_file=test_file)
 
     print('json_data[\'data\']: ', json_data['data'])
-    print('json_data['\status\']: ', json_data['status'])
-    """
+    print('json_data[\'status\']: ', json_data['status'])
