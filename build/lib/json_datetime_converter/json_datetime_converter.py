@@ -67,7 +67,7 @@ class JSONDatetimeConverter:
                     if data == 'heartbeat_last' or data == 'flatline_last':
                         json_data_converted[data] = dateutil.parser.parse(json_data_raw[data])
 
-                    elif data == 'heartbeat_timeout' or data == 'flatline_timeout':
+                    elif data == 'heartbeat_timeout' or data == 'alert_reset_interval':
                         json_data_converted[data] = datetime.timedelta(seconds=json_data_raw[data])
 
                     else:
