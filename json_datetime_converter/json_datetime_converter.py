@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 import sys
@@ -66,7 +67,7 @@ class JSONDatetimeConverter:
                     if data == 'heartbeat_last' or data == 'flatline_last':
                         json_data_converted[data] = dateutil.parser.parse(json_data_raw[data])
 
-                    elif data == 'heartbeat_timeout' or data == 'heartbeat_delta' or data == 'flatline_timeout' or data == 'flatline_delta':
+                    elif data == 'heartbeat_timeout' or data == 'flatline_timeout':
                         json_data_converted[data] = datetime.timedelta(seconds=json_data_raw[data])
 
                     else:
