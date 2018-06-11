@@ -5,12 +5,12 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='json_datetime_converter',
-    version='0.1a1',
+    version='0.1a2',
     author='Hunter M. Allen',
     author_email='allenhm@gmail.com',
     license='MIT',
     packages=['json_datetime_converter'],
-    install_requires=[],
+    install_requires=['python-dateutil>=2.7.3'],
     description='Convert datetime objects to iso-format while reading from and writing to json files.',
     long_description=long_description,
     long_description_content_type='text/markdown',
